@@ -1,5 +1,7 @@
 # @rackmarten/ui-kit
 
+[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/rackmarten)
+
 Vue 3 + Vuetify 3 building blocks for the frontend of a small self-hosted
 web app: an app shell, a shared theme, routing, notifications, global search
 and identity helpers. Its backend counterpart is
@@ -108,6 +110,16 @@ Tests live in `test/`, mirroring `src/` (`src/auth/jwt.ts` ->
 They run on Vitest with jsdom. The build writes `.d.ts` files with vue-tsc
 and the JS bundle with Vite into the same `dist/`, which is why
 `vite.config.ts` sets `build.emptyOutDir: false`.
+
+## Support this project
+
+If ui-kit saves you time, you can support its development on
+[Ko-fi](https://ko-fi.com/rackmarten):
+
+[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/rackmarten)
+
+Bug reports, ideas and pull requests
+are just as welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 See `CONTRIBUTING.md` for how to contribute and `CHANGELOG.md` for what
 changed in each release. Licensed under the [MIT License](LICENSE).
