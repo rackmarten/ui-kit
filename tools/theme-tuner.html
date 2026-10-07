@@ -1,0 +1,911 @@
+<!doctype html>
+<!--
+  Theme tuner for @rackmarten/ui-kit: a mock app screen with live controls
+  for the app bar, background tint, glow and per-app accents. Open it straight
+  in a browser (no build step), tune it on the screen you care about, press
+  "Copy values" and carry them into packages/ui-kit/src/plugins/vuetify.ts.
+  Its defaults mirror the current theme; keep the two in sync when either changes.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Homelab Theme Tuner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --accent: 63, 174, 106;
+        --bar: #1f5a37;
+        --bar2: #1f5a37;
+        --on-bar: #ffffff;
+        --bg: #0e0f13;
+        --surface: #1a1b21;
+        --surface-2: #26272e;
+        --on: 232, 233, 238;
+        --border: rgba(255, 255, 255, 0.1);
+        --success: 92, 194, 129;
+        --warning: 255, 183, 77;
+        --error: 255, 107, 107;
+        --info: 90, 184, 240;
+        --secondary: 63, 174, 170;
+        --grey: 158, 160, 170;
+        --glow: none;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font:
+          14px/1.5 Roboto,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        color: rgb(var(--on));
+        background: var(--glow), var(--bg);
+        background-attachment: fixed;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid rgb(var(--accent));
+        outline-offset: 2px;
+      }
+
+      /* ---------- mock app ---------- */
+      .bar {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 5;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 16px;
+        color: var(--on-bar);
+        background: linear-gradient(120deg, var(--bar) 0%, var(--bar2) 100%);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      }
+      .bar .brand {
+        font-size: 20px;
+        font-weight: 500;
+      }
+      .bar .spacer {
+        flex: 1;
+      }
+      .bar .search {
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        padding: 8px 14px;
+        width: min(360px, 40vw);
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .bar .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.22);
+        display: grid;
+        place-items: center;
+        font-weight: 500;
+      }
+      .shell {
+        display: flex;
+        min-height: calc(100% - 64px);
+      }
+      nav.rail {
+        width: 232px;
+        flex: none;
+        padding: 12px 8px;
+        background: rgba(var(--on), 0.02);
+        border-right: 1px solid var(--border);
+      }
+      nav.rail a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 9px 14px;
+        border-radius: 8px;
+        color: rgba(var(--on), 0.78);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      nav.rail a.on {
+        background: rgba(var(--accent), 0.16);
+        color: rgb(var(--accent));
+      }
+      nav.rail .ico {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        background: currentColor;
+        opacity: 0.55;
+      }
+      main {
+        flex: 1;
+        min-width: 0;
+        padding: 24px clamp(16px, 3vw, 40px) 48px;
+        max-width: 1400px;
+      }
+      h1 {
+        font-size: 24px;
+        font-weight: 500;
+        margin: 0 0 4px;
+      }
+      .sub {
+        color: rgba(var(--on), 0.62);
+        margin: 0 0 20px;
+      }
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .card {
+        background: var(--surface);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+      }
+      .tile {
+        padding: 16px;
+      }
+      .tile .n {
+        font-size: 30px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+      .tile .l {
+        color: rgba(var(--on), 0.62);
+      }
+      .tile.accent {
+        background: rgba(var(--success), 0.14);
+        box-shadow: none;
+      }
+      .tile.accent .n {
+        color: rgb(var(--success));
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .field {
+        border: 1px solid rgba(var(--on), 0.28);
+        border-radius: 8px;
+        padding: 9px 12px;
+        min-width: 180px;
+        color: rgba(var(--on), 0.7);
+        background: transparent;
+      }
+      .btn {
+        border: 0;
+        border-radius: 8px;
+        padding: 9px 18px;
+        font-weight: 500;
+        cursor: pointer;
+        background: rgb(var(--accent));
+        color: var(--on-accent, #fff);
+      }
+      .btn.ghost {
+        background: transparent;
+        color: rgb(var(--accent));
+      }
+      .tbl {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .tbl th {
+        text-align: left;
+        font-weight: 500;
+        color: rgba(var(--on), 0.62);
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      .tbl td {
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .tbl tr:last-child td {
+        border-bottom: 0;
+      }
+      .tbl tr:hover td {
+        background: rgba(var(--on), 0.03);
+      }
+      .tbl .id {
+        color: rgba(var(--on), 0.55);
+        font-variant-numeric: tabular-nums;
+        width: 56px;
+      }
+      .tbl .proj {
+        color: rgba(var(--on), 0.62);
+        white-space: nowrap;
+      }
+      .scroll {
+        overflow-x: auto;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 2px 10px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 500;
+        white-space: nowrap;
+        background: rgba(var(--c), 0.16);
+        color: rgb(var(--c));
+      }
+      .chip::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      /* ---------- tuner panel ---------- */
+      .tuner {
+        position: fixed;
+        right: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        z-index: 20;
+        width: 340px;
+        max-width: calc(100vw - 32px);
+        max-height: calc(100% - 96px);
+        overflow: auto;
+        background: #16171c;
+        color: #e8e9ee;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        padding: 14px 16px 16px;
+        font-size: 13px;
+        color-scheme: dark;
+      }
+      .tuner.min .body {
+        display: none;
+      }
+      .tuner header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tuner header strong {
+        flex: 1;
+        font-size: 14px;
+      }
+      .tuner header button {
+        background: rgba(255, 255, 255, 0.08);
+        border: 0;
+        border-radius: 6px;
+        padding: 4px 10px;
+        cursor: pointer;
+        color: #e8e9ee;
+      }
+      .tuner .body {
+        display: grid;
+        gap: 14px;
+        margin-top: 12px;
+      }
+      .tuner fieldset {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+      .tuner legend {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9a9ca8;
+        margin-bottom: 6px;
+        padding: 0;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 110px 1fr 44px;
+        gap: 8px;
+        align-items: center;
+      }
+      .row output {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        color: #b8bac5;
+      }
+      .row input[type="range"] {
+        width: 100%;
+        accent-color: rgb(var(--accent));
+      }
+      .seg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .seg button {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: transparent;
+        color: #cfd1da;
+        border-radius: 999px;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-size: 12.5px;
+      }
+      .seg button[aria-pressed="true"] {
+        background: #e8e9ee;
+        color: #16171c;
+        border-color: #e8e9ee;
+      }
+      .swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        vertical-align: -1px;
+        margin-right: 6px;
+      }
+      .tuner pre {
+        margin: 0;
+        font:
+          11.5px/1.45 "Roboto Mono",
+          ui-monospace,
+          monospace;
+        background: #0d0e11;
+        border-radius: 8px;
+        padding: 10px;
+        overflow-x: auto;
+        color: #c9ccd6;
+        white-space: pre;
+      }
+      .tuner .actions {
+        display: flex;
+        gap: 8px;
+      }
+      .tuner .actions button {
+        flex: 1;
+        border: 0;
+        border-radius: 8px;
+        padding: 8px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+        color: #e8e9ee;
+        font-weight: 500;
+      }
+      .note {
+        color: #9a9ca8;
+        margin: 0;
+      }
+
+      @media (max-width: 900px) {
+        nav.rail {
+          display: none;
+        }
+        .bar .search {
+          display: none;
+        }
+        .tuner {
+          left: 16px;
+          right: 16px;
+          width: auto;
+          max-height: 55%;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        body,
+        .bar,
+        .card,
+        .chip {
+          transition:
+            background-color 0.2s,
+            color 0.2s;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bar">
+      <span class="brand" id="brand">Green</span>
+      <span class="spacer"></span>
+      <span class="search">Search tasks…</span>
+      <span class="avatar">M</span>
+    </header>
+
+    <div class="shell">
+      <nav class="rail" aria-label="Mock navigation">
+        <a href="#tasks" class="on"><span class="ico"></span>Tasks</a>
+        <a href="#tasks"><span class="ico"></span>Projects</a>
+        <a href="#tasks"><span class="ico"></span>Chat</a>
+        <a href="#tasks"><span class="ico"></span>Workers</a>
+        <a href="#tasks"><span class="ico"></span>Plan</a>
+        <a href="#tasks"><span class="ico"></span>Releases</a>
+        <a href="#tasks"><span class="ico"></span>Agents</a>
+      </nav>
+
+      <main id="tasks">
+        <h1>Tasks</h1>
+        <p class="sub">Mock data for tuning the theme. Nothing here talks to a server.</p>
+
+        <div class="tiles">
+          <div class="card tile">
+            <div class="n">14</div>
+            <div class="l">queued</div>
+          </div>
+          <div class="card tile">
+            <div class="n">3</div>
+            <div class="l">executing</div>
+          </div>
+          <div class="card tile">
+            <div class="n">6</div>
+            <div class="l">waiting on you</div>
+          </div>
+          <div class="card tile accent">
+            <div class="n">212</div>
+            <div class="l">done this month</div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <span class="field">Status: open</span>
+          <span class="field">Project: all</span>
+          <span class="spacer" style="flex: 1"></span>
+          <button class="btn ghost" type="button">Filters</button>
+          <button class="btn" type="button">New task</button>
+        </div>
+
+        <div class="card scroll">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Project</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <aside class="tuner" id="tuner" aria-label="Theme tuner">
+      <header>
+        <strong>Theme tuner</strong>
+        <button type="button" id="min">Hide</button>
+      </header>
+      <div class="body">
+        <fieldset>
+          <legend>Mode</legend>
+          <div class="seg" id="mode"></div>
+        </fieldset>
+        <fieldset>
+          <legend>App accent</legend>
+          <div class="seg" id="apps"></div>
+          <div class="row">
+            <label for="accent">Custom</label><input type="color" id="accent" /><output
+              id="accentOut"
+            ></output>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>App bar</legend>
+          <div class="seg" id="barStyle"></div>
+          <div class="row">
+            <label for="barDark">Darkness</label
+            ><input type="range" id="barDark" min="0" max="80" step="1" /><output></output>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Page background</legend>
+          <div class="row">
+            <label for="bgTint">Accent tint</label
+            ><input type="range" id="bgTint" min="0" max="10" step="0.5" /><output></output>
+          </div>
+          <div class="row">
+            <label for="surfTint">Card tint</label
+            ><input type="range" id="surfTint" min="0" max="10" step="0.5" /><output></output>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Glow</legend>
+          <div class="row">
+            <label for="glow1">Main spot</label
+            ><input type="range" id="glow1" min="0" max="40" step="1" /><output></output>
+          </div>
+          <div class="row">
+            <label for="glow2">Second spot</label
+            ><input type="range" id="glow2" min="0" max="40" step="1" /><output></output>
+          </div>
+          <div class="row">
+            <label for="glowSize">Size (vmax)</label
+            ><input type="range" id="glowSize" min="20" max="120" step="1" /><output></output>
+          </div>
+          <div class="row">
+            <label for="hue2">2nd spot hue</label
+            ><input type="range" id="hue2" min="-90" max="90" step="5" /><output></output>
+          </div>
+          <div class="seg" id="glowPos"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Values for ui-kit</legend>
+          <pre id="out"></pre>
+          <div class="actions">
+            <button type="button" id="copy">Copy values</button>
+            <button type="button" id="reset">Reset</button>
+          </div>
+          <p class="note" id="copyNote">
+            Carry the values into packages/ui-kit/src/plugins/vuetify.ts.
+          </p>
+        </fieldset>
+      </div>
+    </aside>
+
+    <script>
+      (() => {
+        const APPS = [
+          { id: "green", name: "Green", accent: "#3fae6a" },
+          { id: "coral", name: "Coral", accent: "#ff6b6b" },
+          { id: "blue", name: "Blue", accent: "#4a9eff" },
+          { id: "amber", name: "Amber", accent: "#e0a030" },
+          { id: "teal", name: "Teal", accent: "#2e9d86" },
+          { id: "violet", name: "Violet", accent: "#8a6cff" },
+        ];
+        const BAR_STYLES = [
+          { id: "solid", label: "Solid dark" },
+          { id: "same-hue", label: "Same-hue gradient" },
+          { id: "hue-shift", label: "Hue-shift gradient" },
+        ];
+        const GLOW_POS = [
+          { id: "corners", label: "Top corners", p1: "8% -10%", p2: "100% 10%" },
+          { id: "diagonal", label: "Diagonal", p1: "0% 0%", p2: "100% 100%" },
+          { id: "top", label: "Top centre", p1: "50% -20%", p2: "100% 100%" },
+        ];
+        const DEFAULTS = {
+          mode: "dark",
+          app: "green",
+          accent: "#3fae6a",
+          barStyle: "hue-shift",
+          barDark: 60,
+          bgTint: 0.5,
+          surfTint: 0,
+          glow1: 16,
+          glow2: 10,
+          glowSize: 60,
+          hue2: 30,
+          glowPos: "corners",
+        };
+        const KEY = "homelab-theme-tuner-v2";
+        let s = { ...DEFAULTS };
+        try {
+          Object.assign(s, JSON.parse(localStorage.getItem(KEY) || "{}"));
+        } catch {}
+
+        // ---- colour helpers (same maths as ui-kit's color.ts) ----
+        // APPS mirrors homelabAccents and DEFAULTS mirrors themeColors/homelabGlow
+        // in packages/ui-kit/src/plugins/vuetify.ts.
+        const hexToRgb = (h) => {
+          h = h.replace("#", "");
+          if (h.length === 3) h = [...h].map((c) => c + c).join("");
+          return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+        };
+        const rgbToHex = (r) =>
+          "#" +
+          r
+            .map((v) =>
+              Math.round(Math.max(0, Math.min(255, v)))
+                .toString(16)
+                .padStart(2, "0"),
+            )
+            .join("");
+        const mix = (a, b, t) => {
+          const x = hexToRgb(a),
+            y = hexToRgb(b);
+          return rgbToHex(x.map((v, i) => v * t + y[i] * (1 - t)));
+        };
+        const rgbToHsl = ([r, g, b]) => {
+          r /= 255;
+          g /= 255;
+          b /= 255;
+          const max = Math.max(r, g, b),
+            min = Math.min(r, g, b),
+            l = (max + min) / 2;
+          if (max === min) return [0, 0, l];
+          const d = max - min,
+            sat = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          const h =
+            max === r
+              ? (g - b) / d + (g < b ? 6 : 0)
+              : max === g
+                ? (b - r) / d + 2
+                : (r - g) / d + 4;
+          return [h * 60, sat, l];
+        };
+        const hslToRgb = ([h, sat, l]) => {
+          h = (((h % 360) + 360) % 360) / 360;
+          if (sat === 0) return [l, l, l].map((v) => v * 255);
+          const q = l < 0.5 ? l * (1 + sat) : l + sat - l * sat,
+            p = 2 * l - q;
+          const f = (t) => {
+            t = (t + 1) % 1;
+            return t < 1 / 6
+              ? p + (q - p) * 6 * t
+              : t < 1 / 2
+                ? q
+                : t < 2 / 3
+                  ? p + (q - p) * (2 / 3 - t) * 6
+                  : p;
+          };
+          return [f(h + 1 / 3), f(h), f(h - 1 / 3)].map((v) => v * 255);
+        };
+        const shiftHue = (hex, deg) => {
+          const [h, sa, l] = rgbToHsl(hexToRgb(hex));
+          return rgbToHex(hslToRgb([h + deg, sa, l]));
+        };
+        const triplet = (hex) => hexToRgb(hex).join(", ");
+        const lum = (hex) => {
+          const [r, g, b] = hexToRgb(hex).map((v) => {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        };
+
+        const SEMANTIC = {
+          dark: {
+            success: "#5cc281",
+            warning: "#ffb74d",
+            error: "#ff6b6b",
+            info: "#5ab8f0",
+            grey: "#9ea0aa",
+          },
+          light: {
+            success: "#2e7d32",
+            warning: "#a35400",
+            error: "#c62828",
+            info: "#0b6fb8",
+            grey: "#6b6e78",
+          },
+        };
+
+        const ROWS = [
+          [315, "Adopt the new theme in the demo app", "review", 4, "demo"],
+          [341, "Scale background glow with the viewport", "executing", 6, "ui"],
+          [288, "Retry failed jobs with backoff", "queued", 2, "api"],
+          [302, "Postgres 15 to 18 upgrade", "awaiting_ci", 11, "db"],
+          [297, "Media server setup", "handoff", 3, "media"],
+          [274, "Weekly release check", "done", 0, "infra"],
+          [266, "Scoped access for background jobs", "deploying", 5, "api"],
+          [251, "Near-duplicate grouping in search", "rework", 7, "app"],
+          [233, "Backup client module", "planned", 1, "backup"],
+          [219, "Old tag series in version check", "rejected", 0, "infra"],
+        ];
+        const STATUS = {
+          idea: "grey",
+          defined: "grey",
+          planned: "grey",
+          decomposed: "grey",
+          queued: "info",
+          executing: "primary",
+          handoff: "warning",
+          awaiting_ci: "secondary",
+          awaiting_merge: "secondary",
+          awaiting_review: "warning",
+          deploying: "secondary",
+          verifying: "secondary",
+          review: "warning",
+          rework: "error",
+          done: "success",
+          rejected: "grey",
+        };
+        const prio = (p) => (p >= 10 ? "error" : p >= 5 ? "warning" : p >= 1 ? "info" : "grey");
+        const chip = (text, c) =>
+          `<span class="chip" style="--c: var(--${c === "primary" ? "accent" : c})">${text}</span>`;
+        document.getElementById("rows").innerHTML = ROWS.map(
+          ([id, t, st, p, pr]) =>
+            `<tr><td class="id">${id}</td><td>${t}</td><td>${chip(st.replace(/_/g, " "), STATUS[st])}</td><td>${p ? chip(p, prio(p)) : ""}</td><td class="proj">${pr}</td></tr>`,
+        ).join("");
+
+        function compute() {
+          const dark = s.mode === "dark";
+          const a = s.accent;
+          const baseBg = dark ? "#0e0f13" : "#f4f5f8";
+          const baseSurf = dark ? "#1a1b21" : "#ffffff";
+          const bg = mix(a, baseBg, s.bgTint / 100);
+          const surface = mix(a, baseSurf, s.surfTint / 100);
+          const barA = mix("#000000", a, s.barDark / 100);
+          let barB = barA;
+          if (s.barStyle === "same-hue")
+            barB = mix("#000000", a, Math.min(0.9, s.barDark / 100 + 0.22));
+          if (s.barStyle === "hue-shift") barB = mix("#000000", shiftHue(a, 40), s.barDark / 100);
+          const secondary = shiftHue(a, s.hue2);
+          const pos = GLOW_POS.find((g) => g.id === s.glowPos) || GLOW_POS[0];
+          const k = dark ? 1 : 0.6; // light mode: same glow, fainter
+          const a1 = (s.glow1 / 100) * k,
+            a2 = (s.glow2 / 100) * k;
+          const glow =
+            `radial-gradient(circle at ${pos.p1}, rgba(${triplet(a)}, ${a1.toFixed(3)}), transparent ${s.glowSize}vmax), ` +
+            `radial-gradient(circle at ${pos.p2}, rgba(${triplet(secondary)}, ${a2.toFixed(3)}), transparent ${Math.round(s.glowSize * 0.85)}vmax)`;
+          return { dark, a, bg, surface, barA, barB, secondary, glow, a1, a2, pos };
+        }
+
+        function apply() {
+          const c = compute();
+          const r = document.documentElement.style;
+          const sem = SEMANTIC[s.mode];
+          document.documentElement.style.colorScheme = c.dark ? "dark" : "light";
+          r.setProperty("--accent", triplet(c.a));
+          r.setProperty("--on-accent", lum(c.a) > 0.45 ? "#101114" : "#ffffff");
+          r.setProperty("--secondary", triplet(c.secondary));
+          r.setProperty("--bar", c.barA);
+          r.setProperty("--bar2", c.barB);
+          r.setProperty("--bg", c.bg);
+          r.setProperty("--surface", c.surface);
+          r.setProperty("--on", c.dark ? "232, 233, 238" : "28, 29, 34");
+          r.setProperty("--border", c.dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)");
+          r.setProperty(
+            "--shadow",
+            c.dark
+              ? "0 1px 3px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.3)"
+              : "0 1px 3px rgba(20,22,30,.10), 0 1px 2px rgba(20,22,30,.06)",
+          );
+          r.setProperty("--glow", c.glow);
+          for (const n of ["success", "warning", "error", "info", "grey"])
+            r.setProperty("--" + n, triplet(sem[n]));
+          document.getElementById("brand").textContent = (
+            APPS.find((x) => x.id === s.app) || { name: "Custom" }
+          ).name;
+
+          document.getElementById("out").textContent = JSON.stringify(
+            {
+              app: s.app,
+              accent: s.accent,
+              appBar: { style: s.barStyle, darkenPct: s.barDark, from: c.barA, to: c.barB },
+              background: {
+                accentTintPct: s.bgTint,
+                dark: mix(s.accent, "#0e0f13", s.bgTint / 100),
+                light: mix(s.accent, "#f4f5f8", s.bgTint / 100),
+              },
+              surfaceTintPct: s.surfTint,
+              glow: {
+                main: s.glow1 / 100,
+                second: s.glow2 / 100,
+                sizeVmax: s.glowSize,
+                secondHueShift: s.hue2,
+                positions: s.glowPos,
+                lightModeFactor: 0.6,
+              },
+            },
+            null,
+            2,
+          );
+          try {
+            localStorage.setItem(KEY, JSON.stringify(s));
+          } catch {}
+          syncControls();
+        }
+
+        function seg(el, items, key, onPick) {
+          el.innerHTML = items
+            .map(
+              (i) =>
+                `<button type="button" data-v="${i.id}">${i.swatch ? `<span class="swatch" style="background:${i.swatch}"></span>` : ""}${i.label}</button>`,
+            )
+            .join("");
+          el.addEventListener("click", (e) => {
+            const b = e.target.closest("button");
+            if (!b) return;
+            onPick ? onPick(b.dataset.v) : (s[key] = b.dataset.v);
+            apply();
+          });
+        }
+        seg(
+          document.getElementById("mode"),
+          [
+            { id: "dark", label: "Dark" },
+            { id: "light", label: "Light" },
+          ],
+          "mode",
+        );
+        seg(
+          document.getElementById("apps"),
+          APPS.map((x) => ({ id: x.id, label: x.name, swatch: x.accent })),
+          "app",
+          (v) => {
+            s.app = v;
+            s.accent = APPS.find((x) => x.id === v).accent;
+          },
+        );
+        seg(document.getElementById("barStyle"), BAR_STYLES, "barStyle");
+        seg(document.getElementById("glowPos"), GLOW_POS, "glowPos");
+
+        const ranges = ["barDark", "bgTint", "surfTint", "glow1", "glow2", "glowSize", "hue2"];
+        const fmt = {
+          barDark: (v) => v + "%",
+          bgTint: (v) => v + "%",
+          surfTint: (v) => v + "%",
+          glow1: (v) => v + "%",
+          glow2: (v) => v + "%",
+          glowSize: (v) => v,
+          hue2: (v) => v + "°",
+        };
+        for (const id of ranges) {
+          document.getElementById(id).addEventListener("input", (e) => {
+            s[id] = Number(e.target.value);
+            apply();
+          });
+        }
+        const accentIn = document.getElementById("accent");
+        accentIn.addEventListener("input", (e) => {
+          s.accent = e.target.value;
+          s.app = "custom";
+          apply();
+        });
+
+        function syncControls() {
+          for (const id of ranges) {
+            const el = document.getElementById(id);
+            el.value = s[id];
+            el.parentElement.querySelector("output").textContent = fmt[id](s[id]);
+          }
+          accentIn.value = s.accent;
+          document.getElementById("accentOut").textContent = "";
+          const pressed = { mode: s.mode, apps: s.app, barStyle: s.barStyle, glowPos: s.glowPos };
+          for (const [id, v] of Object.entries(pressed)) {
+            document
+              .querySelectorAll(`#${id} button`)
+              .forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+          }
+        }
+
+        document.getElementById("min").addEventListener("click", (e) => {
+          const t = document.getElementById("tuner");
+          t.classList.toggle("min");
+          e.target.textContent = t.classList.contains("min") ? "Show" : "Hide";
+        });
+        document.getElementById("reset").addEventListener("click", () => {
+          s = { ...DEFAULTS };
+          apply();
+        });
+        document.getElementById("copy").addEventListener("click", () => {
+          const text = document.getElementById("out").textContent,
+            note = document.getElementById("copyNote");
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              note.textContent = "Copied. Paste it into the chat.";
+            })
+            .catch(() => {
+              const r = document.createRange();
+              r.selectNodeContents(document.getElementById("out"));
+              const sel = getSelection();
+              sel.removeAllRanges();
+              sel.addRange(r);
+              note.textContent = "Selected. Press Ctrl+C to copy.";
+            });
+        });
+
+        apply();
+      })();
+    </script>
+  </body>
+</html>

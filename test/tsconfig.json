@@ -1,0 +1,7 @@
+// Lets the editor and typescript-eslint's project service, which pick the
+// nearest tsconfig.json, type-check tests alongside the sources they import.
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "noEmit": true, "rootDir": ".." },
+  "include": ["../src", "."]
+}
