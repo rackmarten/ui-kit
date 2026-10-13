@@ -92,6 +92,38 @@ What it exports:
   `initials`): load the caller from server-kit's `/api/me` and show a
   "Viewing as" banner while an admin views as someone else.
 
+- **API client** (`createApi`, `ApiError`): a JSON fetch wrapper. Plain
+  objects and arrays are sent as JSON with `content-type: application/json`;
+  `FormData`, `Blob`, `ArrayBuffer`, `URLSearchParams` and strings go through
+  untouched, and no body means no content-type. A 204 or empty response
+  resolves `undefined`. A non-2xx response throws `ApiError` (`status`,
+  `path`, `body`) with the body's `error` or `message`, else
+  `<path> -> <status>`. `onUnauthorized` runs on a 401 before the throw.
+  `raw()` applies the same headers and 401 handling but returns the
+  `Response` as is.
+
+  ```ts
+  const api = createApi({
+    baseUrl: "/api",
+    headers: () => ({ authorization: `Bearer ${token.value}` }),
+    onUnauthorized: () => void router.push("/login"),
+  });
+  const items = await api.get<Item[]>("/items");
+  await api.post("/items", { name: "demo" });
+  ```
+
+- **`usePolling(load, intervalMs = 5000, { immediate, pauseWhenHidden })`**:
+  calls `load` while the component is mounted, returning `data`, `error`,
+  `loading` and `refresh()`. Ticks are skipped while the tab is hidden, with
+  one refresh when it is shown again (`pauseWhenHidden: false` turns that
+  off); a load never overlaps another, and a failed load keeps the last good
+  `data`. Outside a component it starts at once and stops with its effect
+  scope.
+
+  ```ts
+  const { data: jobs, error, refresh } = usePolling(() => api.get<Job[]>("/jobs"), 10_000);
+  ```
+
 Don't import ui-kit's `.vue` sources out of `node_modules`; use the built
 package entry point.
 
