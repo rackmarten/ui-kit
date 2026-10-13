@@ -51,3 +51,8 @@ export { useHomelabUser } from "./identity/useHomelabUser.js";
 export type { HomelabUser, HomelabUserOptions } from "./identity/useHomelabUser.js";
 export { avatarSrc, DEFAULT_AVATAR_BASE_URL, initials } from "./identity/avatar.js";
 export type { ShellUser } from "./identity/avatar.js";
+
+export { ApiError, createApi } from "./api/createApi.js";
+export type { Api, ApiOptions } from "./api/createApi.js";
+export { usePolling } from "./api/usePolling.js";
+export type { Polling, PollingOptions } from "./api/usePolling.js";

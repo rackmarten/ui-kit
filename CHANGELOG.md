@@ -8,6 +8,19 @@ While the version is 0.x, a minor bump may contain breaking changes.
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-13
+
+### Added
+
+- `createApi` and `ApiError`: a JSON API client with a base URL, per-request
+  headers, request defaults, a 401 hook and an injectable `fetch`. JSON
+  bodies get a content-type, native bodies (`FormData`, `Blob`, ...) pass
+  through, 204 and empty bodies resolve `undefined`, and errors carry the
+  status, path and parsed body.
+- `usePolling`: polls a loader while the component is mounted, pauses while
+  the page is hidden, never overlaps loads and keeps the last good data on
+  failure.
+
 ## [0.10.0] - 2026-10-07
 
 The first public release.
@@ -38,5 +51,6 @@ The first public release.
   `lint:fix` and `format` scripts; the source was reformatted by Prettier
   and `eslint --fix`, with no change in behavior.
 
-[Unreleased]: https://github.com/rackmarten/ui-kit/commits/main
+[Unreleased]: https://github.com/rackmarten/ui-kit/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/rackmarten/ui-kit/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/rackmarten/ui-kit/releases/tag/v0.10.0
