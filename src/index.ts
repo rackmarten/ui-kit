@@ -56,3 +56,10 @@ export { ApiError, createApi } from "./api/createApi.js";
 export type { Api, ApiOptions } from "./api/createApi.js";
 export { usePolling } from "./api/usePolling.js";
 export type { Polling, PollingOptions } from "./api/usePolling.js";
+
+export { trackUsage } from "./usage/usageTracker.js";
+export type { ClientUsageEvent, UsageSend, UsageTrackerOptions } from "./usage/usageTracker.js";
+export { useUsageTracker } from "./usage/useUsageTracker.js";
+export type { UsageTrackerHandle, UseUsageTrackerOptions } from "./usage/useUsageTracker.js";
+export { usageInventory } from "./usage/usageInventory.js";
+export type { UsageInventoryItem, UsageInventoryOptions } from "./usage/usageInventory.js";

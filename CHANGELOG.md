@@ -8,6 +8,20 @@ While the version is 0.x, a minor bump may contain breaking changes.
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-11-24
+
+### Added
+
+- Opt-in usage tracking for server-kit's usage relay: `AppShell`'s `usage`
+  prop (off by default) and `useUsageTracker` record a `view` per
+  navigation (route pattern, never params), `active` seconds per minute per
+  route and `data-module` (visible tab, focused window, input in the last
+  30 seconds) and a `click` per `data-track="<feature>"` element clicked.
+  Events are batched, sent every minute and by `sendBeacon` when the tab is
+  hidden. `trackUsage(feature)` records a programmatic event, and
+  `usageInventory` lists the router's views and the app's features for
+  server-kit's `usage.inventory`.
+
 ## [0.11.0] - 2026-10-13
 
 ### Added
@@ -51,6 +65,7 @@ The first public release.
   `lint:fix` and `format` scripts; the source was reformatted by Prettier
   and `eslint --fix`, with no change in behavior.
 
-[Unreleased]: https://github.com/rackmarten/ui-kit/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/rackmarten/ui-kit/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/rackmarten/ui-kit/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/rackmarten/ui-kit/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/rackmarten/ui-kit/releases/tag/v0.10.0

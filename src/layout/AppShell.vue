@@ -11,6 +11,8 @@ import {
   initials,
   type ShellUser,
 } from "../identity/avatar.js";
+import type { UsageTrackerOptions } from "../usage/usageTracker.js";
+import { useUsageTracker } from "../usage/useUsageTracker.js";
 
 export interface NavItem {
   label: string;
@@ -35,6 +37,10 @@ const props = withDefaults(
     avatarBaseUrl?: string;
     // Route of the app's own profile page; adds "Profile" to the account menu.
     profileTo?: string;
+    // Usage tracking (views, active time, data-track clicks) posted to
+    // server-kit's usage relay. Off unless set; an object sets its options
+    // (read once, when the shell is created).
+    usage?: boolean | UsageTrackerOptions;
   }>(),
   {
     navItems: () => [],
@@ -42,8 +48,14 @@ const props = withDefaults(
     user: undefined,
     avatarBaseUrl: DEFAULT_AVATAR_BASE_URL,
     profileTo: undefined,
+    usage: false,
   },
 );
+
+useUsageTracker({
+  ...(typeof props.usage === "object" ? props.usage : {}),
+  enabled: () => Boolean(props.usage),
+});
 
 const { mobile } = useDisplay();
 const fetched =
