@@ -125,6 +125,49 @@ What it exports:
   const { data: jobs, error, refresh } = usePolling(() => api.get<Job[]>("/jobs"), 10_000);
   ```
 
+- **Usage tracking** (`AppShell`'s `usage` prop, `useUsageTracker`,
+  `trackUsage`, `usageInventory`): opt-in, off unless the app enables it.
+  It posts to server-kit's usage relay (`POST /api/usage/events`, see
+  server-kit's `usage` option), which stamps who the caller is:
+  - `view`: one per navigation to a new path, as the route pattern
+    (`/items/:id`), never the URL, its params or its query string.
+  - `active`: seconds (1-60) per minute, per route and module. Time counts
+    while the tab is visible, the window has focus and there was mouse,
+    keyboard, touch or scroll input in the last 30 seconds. The module is
+    the nearest `data-module="<name>"` around the last thing touched, else
+    the route's name, else its first static segment (`items`), else `home`.
+  - `click`: one per click inside an element with `data-track="<feature>"`,
+    or per `trackUsage("<feature>")` call. Only the feature name is sent.
+
+  Events are batched and sent every minute (fetch, with
+  `x-homelab-client: pwa`), and with `sendBeacon` to
+  `/api/usage/events?client=pwa` when the tab is hidden or closed.
+  `usage` takes `true` or `{ url }` for a relay elsewhere; outside AppShell,
+  `useUsageTracker({ enabled })` does the same for its component's lifetime.
+  One tracker runs at a time.
+
+  ```vue
+  <AppShell title="My app" :usage="settings.usageTracking">
+    <section data-module="review">
+      <v-btn data-track="approve" @click="approve">Approve</v-btn>
+    </section>
+  </AppShell>
+  ```
+
+  `usageInventory({ routes, features })` lists the app's views (route
+  patterns, from the router or its route records; redirects left out) and
+  its declared feature names, the shape server-kit's `usage.inventory`
+  takes. A server usually can't import a router full of `.vue` files, so
+  one way is a test in the frontend that writes it to a JSON file the
+  server imports:
+
+  ```ts
+  writeFileSync(
+    "usage-inventory.json",
+    JSON.stringify(usageInventory({ routes: router, features: ["approve", "export"] })),
+  );
+  ```
+
 Don't import ui-kit's `.vue` sources out of `node_modules`; use the built
 package entry point.
 
